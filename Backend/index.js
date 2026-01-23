@@ -1,6 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
+import todoRoute from "./routes/todo.route.js";
 const app = express()
 dotenv.config();
 
@@ -13,10 +14,9 @@ try {
 } catch (error) {
    console.log(error)
 }
+app.use(express.json());
+app.use("/api/todos", todoRoute);
 
-app.get('/', (req, res) => {
-  res.send('Hello guys')
-})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
