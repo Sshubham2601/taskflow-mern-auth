@@ -9,7 +9,7 @@ const PORT = process.env.PORT
 const DB_URI=process.env.MongoDB_URI
 
 try {
-    mongoose.connect(DB_URI);
+   await mongoose.connect(DB_URI);
     console.log("MongoDb connected successfully")
 } catch (error) {
    console.log(error)
