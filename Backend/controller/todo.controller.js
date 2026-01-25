@@ -13,7 +13,9 @@ export const createTodo = async (req, res) => {
       newTodo,
     });
   } catch (error) {
-   
+   if(error.code===11000){
+    return res.status(409).json({message:"Todo with this text already exists"})
+   }
     console.error(error);
     res.status(400).json({
       message: "Error occurring in todo creation",

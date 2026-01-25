@@ -4,6 +4,9 @@ const createSchema=new mongoose.Schema({
     text:{
         type:String,
         required:true,
+        unique: true,
+        trim: true,
+        lowercase: true,
     },
     completed:{
         type:Boolean,
