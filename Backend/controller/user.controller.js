@@ -29,8 +29,18 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {
-  console.log("login function call");
+export const login = async(req, res) => {
+  const {email,password}=req.body;
+
+  if(!email || !password){
+    res.status(400).json({message:"all field are required"})
+  };
+  
+  const User=await user.findOne({email}).select("+password");
+  if(!email || !(await bcrypt.compare(password,User.password))){
+    res.status(401).json({message:"Invalid credential"})
+  }
+  res.status(200).json({message:"user logined in successfully ",User})
 };
 export const logout = () => {
   console.log("logout function call");
