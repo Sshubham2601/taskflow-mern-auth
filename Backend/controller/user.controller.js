@@ -1,5 +1,6 @@
 import user from "../model/user.model.js";
 import {z} from "zod";
+import bcrypt from "bcrypt"
 const registerSchema=z.object({
     username:z.string().min(4,{ message: "Username must be at least 4 characters long" }),
     email: z.string().email({ message: "Invalid email address" }),
@@ -19,7 +20,8 @@ export const register = async (req, res) => {
     if(ExistingUser){
          return res.status(401).json({ message: "User already registered"});
     }
-    const newUser = await user.create({username, email, password});
+    const hashPassword= await bcrypt.hash(password,10)
+    const newUser = await user.create({username, email, password:hashPassword});
     return res.status(201).json({message:"User created successfully",newUser});
   } catch (error) {
     console.error(error)
@@ -33,3 +35,5 @@ export const login = (req, res) => {
 export const logout = () => {
   console.log("logout function call");
 };
+
+
