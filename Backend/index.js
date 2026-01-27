@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import todoRoute from "./routes/todo.route.js";
+import userRoute from "./routes/user.route.js";
 const app = express()
 dotenv.config();
 
@@ -16,7 +17,7 @@ try {
 }
 app.use(express.json());
 app.use("/api/todos", todoRoute);
-
+app.use("/api/users", userRoute)
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
