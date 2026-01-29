@@ -59,7 +59,7 @@ export const login = async (req, res) => {
     const existingUser = await user.findOne({ email }).select("+password");
 
     if (!existingUser || !(await bcrypt.compare(password, existingUser.password))) {
-      console.log(`Login failed for email: ${email}`);
+      // console.log(`Login failed for email: ${email}`);
      return res.status(400).json({ message: "Invalid credential" });
     }
      const token = await generateTokenAndSaveInCookies(res,existingUser._id);
