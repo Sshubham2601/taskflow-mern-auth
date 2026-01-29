@@ -9,6 +9,10 @@ dotenv.config();
 const PORT = process.env.PORT
 const DB_URI=process.env.MongoDB_URI
 
+app.get("/test", (req, res) => {
+  res.send("API working");
+});
+
 try {
    await mongoose.connect(DB_URI);
     console.log("MongoDb connected successfully")

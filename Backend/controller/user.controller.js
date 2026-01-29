@@ -1,6 +1,7 @@
 import user from "../model/user.model.js";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { generateTokenAndSaveInCookies } from "../jwt/token.js";
 const registerSchema = z.object({
   username: z
     .string()
@@ -12,6 +13,8 @@ const registerSchema = z.object({
 });
 export const register = async (req, res) => {
   const validationResult = registerSchema.safeParse(req.body);
+  // console.log("BODY RECEIVED:", req.body);
+
   if (!validationResult.success) {
     return res.status(400).json({
       message: validationResult.error.issues[0].message,
@@ -29,9 +32,13 @@ export const register = async (req, res) => {
       email,
       password: hashPassword,
     });
-    return res
+    if(newUser){ 
+      const token = await generateTokenAndSaveInCookies(res,newUser._id);
+       return res
       .status(201)
-      .json({ message: "User created successfully", newUser });
+      .json({ message: "User created successfully", newUser,token });
+    }
+    
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "error occur in user creation" });
@@ -40,6 +47,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  // console.log("BODY RECEIVED:", req.body);
+
   
   try {
     
@@ -53,12 +62,24 @@ export const login = async (req, res) => {
       console.log(`Login failed for email: ${email}`);
      return res.status(400).json({ message: "Invalid credential" });
     }
-    return res.status(200).json({ message: "user logined in successfully ", existingUser });
+     const token = await generateTokenAndSaveInCookies(res,existingUser._id);
+    return res.status(200).json({ message: "user logined in successfully ", existingUser ,token});
   } catch (error) {
     // console.error('#####'.error);
     return res.status(500).json({ message: "An internal server error occurred"  });
   }
 };
-export const logout = () => {
-  console.log("logout function call");
+export const logout = (req,res) => {
+  try {
+    res.clearCookie("jwt",{
+     httpOnly:true,
+     secure:false,
+     sameSite:"lax",
+     path:"/"
+    });
+    return res.status(200).json({message:"user logout successfully"})
+  } catch (error) {
+    return res.status(500).json({ message: "error occur in user logout" });
+  }
+  
 };
