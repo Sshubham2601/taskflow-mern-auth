@@ -13,7 +13,7 @@ export default function Home() {
         setLoading(true);
         const response = await api.get("/todos/fetch"); 
         console.log(response.data);
-        setTodos(response.data);
+        setTodos(response.data.data);
       } catch (error) {
         console.log(error);
         setError("error to fetch the todos");
@@ -29,5 +29,13 @@ export default function Home() {
   if(error){
     return <p>{error}</p>
   }
-  return <div>Home</div>;
+  return (
+    <div>Home</div>
+    //   <div>
+    //   <h2>Todos</h2>
+    //   {todos.map((todo) => (
+    //     <p key={todo._id}>{todo.title}</p>
+    //   ))}
+    // </div>
+  );
 }
